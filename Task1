@@ -1,0 +1,109 @@
+// A simple Java application to demonstrate unit testing with JUnit
+public class Calculator {
+    // Method to add two integers
+    public int add(int a, int b) {
+        return a + b;
+    }
+
+    // Method to subtract two integers
+    public int subtract(int a, int b) {
+        return a - b;
+    }
+
+    // Method to multiply two integers
+    public int multiply(int a, int b) {
+        return a * b;
+    }
+
+    // Method to divide two integers (throws exception for division by zero)
+    public int divide(int a, int b) throws IllegalArgumentException {
+        if (b == 0) {
+            throw new IllegalArgumentException("Division by zero is not allowed.");
+        }
+        return a / b;
+    }
+
+    // Method to calculate the power of a number
+    public double power(double base, double exponent) {
+        if (base == 0 && exponent < 0) {
+            throw new IllegalArgumentException("Zero to a negative power is undefined.");
+        }
+        return Math.pow(base, exponent);
+    }
+
+    // Method to calculate the square root of a number
+    public double squareRoot(double number) throws IllegalArgumentException {
+        if (number < 0) {
+            throw new IllegalArgumentException("Square root of a negative number is not allowed.");
+        }
+        return Math.sqrt(number);
+    }
+} 
+
+// JUnit test class for the Calculator
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
+public class CalculatorTest {
+
+    private final Calculator calculator = new Calculator();
+
+    @Test
+    public void testAdd() {
+        assertEquals(5, calculator.add(2, 3));
+        assertEquals(-1, calculator.add(-2, 1));
+        assertEquals(0, calculator.add(0, 0));
+    }
+
+    @Test
+    public void testSubtract() {
+        assertEquals(-1, calculator.subtract(2, 3));
+        assertEquals(-3, calculator.subtract(-2, 1));
+        assertEquals(0, calculator.subtract(0, 0));
+    }
+
+    @Test
+    public void testMultiply() {
+        assertEquals(6, calculator.multiply(2, 3));
+        assertEquals(-2, calculator.multiply(-2, 1));
+        assertEquals(0, calculator.multiply(0, 5));
+    }
+
+    @Test
+    public void testDivide() {
+        assertEquals(2, calculator.divide(6, 3));
+        assertEquals(-2, calculator.divide(-6, 3));
+        assertThrows(IllegalArgumentException.class, () -> calculator.divide(1, 0));
+    }
+
+    @Test
+    public void testPower() {
+        assertEquals(8.0, calculator.power(2, 3), 0.0001);
+        assertEquals(1.0, calculator.power(5, 0), 0.0001);
+        assertEquals(0.25, calculator.power(2, -2), 0.0001);
+        assertThrows(IllegalArgumentException.class, () -> calculator.power(0, -1));
+    }
+
+    @Test
+    public void testSquareRoot() {
+        assertEquals(4.0, calculator.squareRoot(16), 0.0001);
+        assertEquals(0.0, calculator.squareRoot(0), 0.0001);
+        assertThrows(IllegalArgumentException.class, () -> calculator.squareRoot(-1));
+    }
+
+    @Test
+    public void testLargeNumbers() {
+        assertEquals(1_000_000_000, calculator.add(500_000_000, 500_000_000));
+        assertEquals(0, calculator.subtract(1_000_000_000, 1_000_000_000));
+        assertEquals(1_000_000_000, calculator.multiply(1_000_000, 1_000));
+        assertEquals(10_000, calculator.divide(1_000_000, 100));
+    }
+
+    @Test
+    public void testEdgeCases() {
+        assertEquals(0.0, calculator.power(0, 5), 0.0001);
+        assertEquals(1.0, calculator.power(1, -1000), 0.0001);
+        assertEquals(1.0, calculator.power(-1, 0), 0.0001);
+        assertThrows(IllegalArgumentException.class, () -> calculator.divide(Integer.MAX_VALUE, 0));
+    }
+}
